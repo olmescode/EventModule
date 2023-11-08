@@ -4,14 +4,16 @@ local playerGui = Players.LocalPlayer and Players.LocalPlayer:WaitForChild("Play
 local mainGui = playerGui:WaitForChild("GameGui")
 
 --[[
-	showBoostCountdown Module Script
+	showCountdown Module Script
 
-	This module script defines the function to handle the countdown display for special effects in the Prison Simulator game.
+	This module script defines the function to handle the countdown display the GUI game.
 
 	Parameters:
-	- boostFrame: The frame that contains the TextLabels for displaying the countdown.
+	- countdownFrame: The frame that will be displaying the countdown.
 ]]
 local activeCountdowns = {}
+
+activeCountdowns.taskLib = task
 
 local function showCountdown(countdownFrame)
 	--[[ 
@@ -19,9 +21,9 @@ local function showCountdown(countdownFrame)
 
 		Parameters:
 		- currentTime: The starting time for the countdown in seconds.
-		- actionString: The name of the action, e.g., "Speed", "Money", "Damage".
+		- countdownName: The name of the countdown.
 	]]
-	countdownFrame = countdownFrame or mainGui.mainGui.ShowStats.Countdown
+	countdownFrame = countdownFrame or mainGui.ShowStats.Countdown
 	
 	return function(currentTime, countdownName)		
 		local hasActiveCountdowns = false
@@ -49,7 +51,7 @@ local function showCountdown(countdownFrame)
 		local function updateBoostLabel(updatedTime, countdownName)
 			local label = countdownFrame[countdownName]
 			if label then
-				label.Text = "Game Starting in " .. currentTimeToStr(updatedTime) .. "Seconds"
+				label.Text = "Game Starting in " .. currentTimeToStr(updatedTime)
 			end
 		end
 		
@@ -59,7 +61,7 @@ local function showCountdown(countdownFrame)
 			
 			-- Update the boostFrame label with the current time and actionString
 			updateBoostLabel(activeCountdowns[countdownName], countdownName)
-			task.wait(1)
+			activeCountdowns.taskLib.wait(1)
 		end
 		
 		-- Clear the remaining time for this action when the countdown is finished

@@ -1,9 +1,10 @@
-local ServerStorage = game:GetService("ServerStorage")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local EventModule = script:FindFirstAncestor("EventModule")
 
-local countdownRemote = ReplicatedStorage.Remotes.Countdown :: RemoteEvent
+local showVotingGUI = require(EventModule.Functions.showVotingGUI)
+local constants = require(EventModule.constants)
 
-local COUNTDOWN_DURATION = 20 -- 20 seconds
+local countdownRemote = EventModule.Remotes.Countdown :: RemoteEvent
+local countdownFinished = EventModule.Remotes.CountdownFinished :: RemoteEvent
 
 local activeCountdowns = {}
 
@@ -23,6 +24,8 @@ local function countdownStart(countdownName, taskLib)
 
 	-- Clear the remaining time for this action when the countdown is finished
 	activeCountdowns[countdownName] = nil
+	
+	countdownFinished:FireAllClients(countdownName)
 end
 
 local function addTimeToCountdown()
@@ -38,7 +41,7 @@ local function addTimeToCountdown()
 
 		if activeCountdowns[countdownName] then
 			-- Add more time to the existing countdown
-			activeCountdowns[countdownName] += duration or COUNTDOWN_DURATION
+			activeCountdowns[countdownName] += duration or constants.COUNTDOWN_DURATION
 
 			-- Fire to client the updated time
 			local currentTime = activeCountdowns[countdownName]
@@ -47,7 +50,7 @@ local function addTimeToCountdown()
 		end
 
 		-- Start a new countdown
-		activeCountdowns[countdownName] = duration or COUNTDOWN_DURATION
+		activeCountdowns[countdownName] = duration or constants.COUNTDOWN_DURATION
 
 		-- Start the countdown action
 		countdownStart(countdownName)

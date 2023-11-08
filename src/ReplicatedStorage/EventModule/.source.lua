@@ -1,5 +1,7 @@
-local EventModule = {}
+local CountdownTimers = require(script.Components.CountdownTimers)
 
-addTimeToCountdown = require(script.Components.CountdownTimers)
+local EventModule = {
+	addTimeToCountdown = CountdownTimers()
+}
 
 return EventModule
