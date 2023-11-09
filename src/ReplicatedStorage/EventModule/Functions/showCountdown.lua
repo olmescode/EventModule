@@ -1,7 +1,12 @@
 local Players = game:GetService("Players")
 
+local EventModule = script:FindFirstAncestor("EventModule")
+local constants = require(EventModule.constants)
+
 local playerGui = Players.LocalPlayer and Players.LocalPlayer:WaitForChild("PlayerGui")
 local mainGui = playerGui:WaitForChild("GameGui")
+
+local CountdownFinishedForClient = EventModule.Events.ClientEvents.CountdownFinishedForClient :: BindableEvent
 
 --[[
 	showCountdown Module Script
@@ -13,9 +18,7 @@ local mainGui = playerGui:WaitForChild("GameGui")
 ]]
 local activeCountdowns = {}
 
-activeCountdowns.taskLib = task
-
-local function showCountdown(countdownFrame)
+local function showCountdown(countdownFrame, taskLib)
 	--[[ 
 		Inner function to handle the countdown display and updates.
 
@@ -24,8 +27,9 @@ local function showCountdown(countdownFrame)
 		- countdownName: The name of the countdown.
 	]]
 	countdownFrame = countdownFrame or mainGui.ShowStats.Countdown
+	taskLib = if taskLib then taskLib else task
 	
-	return function(currentTime, countdownName)		
+	return function(currentTime, countdownName)	
 		local hasActiveCountdowns = false
 		
 		if activeCountdowns[countdownName] then
@@ -38,7 +42,7 @@ local function showCountdown(countdownFrame)
 		activeCountdowns[countdownName] = currentTime
 		
 		-- Make the boostFrame label visible
-		countdownFrame.Visible = true
+		--countdownFrame.Visible = true
 		
 		-- Function to convert remaining time (currentTime) to MM:SS format
 		local function currentTimeToStr(updatedTime)
@@ -48,10 +52,10 @@ local function showCountdown(countdownFrame)
 		end
 		
 		-- Function to update the boostFrame label
-		local function updateBoostLabel(updatedTime, countdownName)
+		local function updateCountdownLabel(updatedTime, countdownName)
 			local label = countdownFrame[countdownName]
 			if label then
-				label.Text = "Game Starting in " .. currentTimeToStr(updatedTime)
+				label.Text = constants.COUNTDOWN_MESSAGE .. currentTimeToStr(updatedTime)
 			end
 		end
 		
@@ -60,8 +64,8 @@ local function showCountdown(countdownFrame)
 			activeCountdowns[countdownName] -= 1
 			
 			-- Update the boostFrame label with the current time and actionString
-			updateBoostLabel(activeCountdowns[countdownName], countdownName)
-			activeCountdowns.taskLib.wait(1)
+			updateCountdownLabel(activeCountdowns[countdownName], countdownName)
+			taskLib.wait(1)
 		end
 		
 		-- Clear the remaining time for this action when the countdown is finished
@@ -69,6 +73,7 @@ local function showCountdown(countdownFrame)
 		
 		-- Check if there are no more active countdowns
 		for countdownName, countdownTime in pairs(activeCountdowns) do
+			print(countdownName, countdownTime)
 			if countdownTime and countdownTime > 0 then
 				hasActiveCountdowns = true
 				break
@@ -77,8 +82,11 @@ local function showCountdown(countdownFrame)
 
 		-- Hide the boostFrame when there are no more active countdowns
 		if not hasActiveCountdowns then
-			countdownFrame.Visible = false
+			--countdownFrame.Visible = false
 		end
+		
+		-- Fire an event to enable showVotingGui
+		CountdownFinishedForClient:Fire(countdownName)
 	end
 end
 

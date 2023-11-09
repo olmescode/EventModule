@@ -1,10 +1,9 @@
 local EventModule = script:FindFirstAncestor("EventModule")
 
-local showVotingGUI = require(EventModule.Functions.showVotingGUI)
 local constants = require(EventModule.constants)
 
-local countdownRemote = EventModule.Remotes.Countdown :: RemoteEvent
-local countdownFinished = EventModule.Remotes.CountdownFinished :: RemoteEvent
+local countdownRemote = EventModule.Events.ServerEvents.Countdown :: RemoteEvent
+local CountdownFinishedForServer = EventModule.Events.ServerEvents.CountdownFinished :: BindableEvent
 
 local activeCountdowns = {}
 
@@ -12,8 +11,9 @@ local function countdownStart(countdownName, taskLib)
 	taskLib = if taskLib then taskLib else task
 	
 	local currentTime = activeCountdowns[countdownName]
-
+	
 	-- Fire to client the currentTimed and start a countdown in the client
+	task.wait(5)
 	countdownRemote:FireAllClients(currentTime, countdownName)
 
 	while activeCountdowns[countdownName] > 0 do
@@ -25,7 +25,7 @@ local function countdownStart(countdownName, taskLib)
 	-- Clear the remaining time for this action when the countdown is finished
 	activeCountdowns[countdownName] = nil
 	
-	countdownFinished:FireAllClients(countdownName)
+	CountdownFinishedForServer:Fire(countdownName)
 end
 
 local function addTimeToCountdown()
@@ -33,12 +33,13 @@ local function addTimeToCountdown()
 		Inner function to handle the countdown in the server and updates.
 
 		Parameters:
-		
+		countdownName: string, the name of the countdown to add time.
+		duration: number, the amount of seconds to add to the countdown.
 	]]
 	return function(countdownName, duration)
 		-- Store the remaining time for this action
-		activeCountdowns[countdownName] = activeCountdowns[countdownName] or {}
-
+		activeCountdowns[countdownName] = activeCountdowns[countdownName]
+		
 		if activeCountdowns[countdownName] then
 			-- Add more time to the existing countdown
 			activeCountdowns[countdownName] += duration or constants.COUNTDOWN_DURATION
@@ -51,7 +52,7 @@ local function addTimeToCountdown()
 
 		-- Start a new countdown
 		activeCountdowns[countdownName] = duration or constants.COUNTDOWN_DURATION
-
+		
 		-- Start the countdown action
 		countdownStart(countdownName)
 	end

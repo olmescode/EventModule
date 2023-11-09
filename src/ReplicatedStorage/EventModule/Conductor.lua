@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local EventModule = script:FindFirstAncestor("EventModule")
-local EventModuleAPI = require(EventModule)
 
 local Conductor = {}
 
@@ -10,8 +9,8 @@ Conductor.ShowCountdown = require(EventModule.Functions.showCountdown)
 Conductor.ShowVotingGUI = require(EventModule.Functions.showVotingGUI)
 
 -- Events
-Conductor.Countdown = EventModule.Remotes.Countdown :: RemoteEvent
-Conductor.CountdownFinished = EventModule.Remotes.CountdownFinished :: RemoteEvent
+Conductor.Countdown = EventModule.Events.ServerEvents.Countdown :: RemoteEvent
+Conductor.CountdownFinished = EventModule.Events.ClientEvents.CountdownFinishedForClient :: BindableEvent
 
 local hasBeenCalled = false
 
@@ -27,7 +26,7 @@ return function(stubs)
 	
 	-- Display the voting GUI after the countdown
 	Conductor.handleShowVotingGUI = Conductor.ShowVotingGUI()
-	Conductor.CountdownFinished.OnClientEvent:Connect(Conductor.handleShowVotingGUI)
+	Conductor.CountdownFinished.Event:Connect(Conductor.handleShowVotingGUI)
 	
 	hasBeenCalled = true
 

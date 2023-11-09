@@ -3,8 +3,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local EventModule = require(ReplicatedStorage:WaitForChild("EventModule"))
 
-local COUNTDOWN_DURATION = 60 -- 60 seconds
-local COUNTDOWN_NAME = "INTERMISISON"
+local INTERMISSION_DURATION = 30 -- 60 seconds
+local VOTE_DURATION = 20
+local COUNTDOWN_NAME = "Countdown"
+local VOTE_COUNTDOWN_NAME = "VoteCountdown"
 
-EventModule.addTimeToCountdown(COUNTDOWN_NAME, COUNTDOWN_DURATION)
+EventModule.addTimeToCountdown(COUNTDOWN_NAME, INTERMISSION_DURATION)
 
+-- TODO Fix this event that is not working
+EventModule.onCountdownFinishedForServer:Connect(function(...: any)
+	print("ended server")
+	EventModule.addTimeToCountdown(VOTE_COUNTDOWN_NAME, VOTE_DURATION)
+end)

@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local EventModule = ReplicatedStorage:WaitForChild("EventModule")
 local showCountdown = require(EventModule.Functions.showCountdown)
 
-local remotes = EventModule:WaitForChild("Remotes")
+local remotes = EventModule:WaitForChild("Events")
 local countdownRemote = remotes:WaitForChild("Countdown") :: RemoteEvent
 
 local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")

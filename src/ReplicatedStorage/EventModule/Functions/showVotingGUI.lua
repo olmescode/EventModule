@@ -1,13 +1,12 @@
 local Players = game:GetService("Players")
 
 local EventModule = script:FindFirstAncestor("EventModule")
-
 local enums = require(EventModule.enums)
 
 local playerGui = Players.LocalPlayer and Players.LocalPlayer:WaitForChild("PlayerGui")
 local mainGui = playerGui:WaitForChild("GameGui")
 
-local voteRemote = EventModule.Remotes.Vote
+local voteRemote = EventModule.Events.ClientEvents.Vote
 
 local connections = {}
 
@@ -36,17 +35,24 @@ local function showVotingGUI(voteFrame)
 	]]
 	voteFrame = voteFrame or mainGui.Frames.Vote
 	
-	return function(_)
+	return function(countdownName)
 		local background = voteFrame.Background
 		local blueTeamButton = background.BlueTeamButton
 		local greenTeamButton = background.GreenTeamButton
 		
+		local function closeVoteFrame()
+			voteFrame.Visible = false
+			disconnectOldConnections()
+		end
+		
 		local function handleBlueTeamVoteButton()
+			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
 			voteRemote:FireServer(enums.TeamOptions.Blue, Players.LocalPlayer)
 		end
 		
 		local function handleGreenTeamVoteButton()
+			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
 			voteRemote:FireServer(enums.TeamOptions.Green, Players.LocalPlayer)
 		end
@@ -59,7 +65,11 @@ local function showVotingGUI(voteFrame)
 		table.insert(connections, greenTeamButton.MouseButton1Click:Connect(handleGreenTeamVoteButton))
 		
 		-- Make the voteFrame frame visible.
-		voteFrame.Visible = true
+		if countdownName == "Countdown" then
+			voteFrame.Visible = true
+		else
+			voteFrame.Visible = false
+		end
 	end
 end
 
