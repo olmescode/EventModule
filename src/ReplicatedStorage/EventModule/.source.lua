@@ -1,7 +1,6 @@
 print("Required EventModule")
 local RunService = game:GetService("RunService")
 
-local CountdownTimers = require(script.Components.CountdownTimers)
 local loadCountdown = require(script.Api.loadCountdown)
 
 local CountdownFinishedForServer = script.Events.ServerEvents.CountdownFinished :: BindableEvent
@@ -12,10 +11,10 @@ if RunService:IsServer() then
 end
 
 local EventModule = {
+	-- Server API
 	loadCountdown = loadCountdown,
 	
-	addTimeToCountdown = CountdownTimers(),
-	
+	-- Events
 	onCountdownFinishedForServer = CountdownFinishedForServer.Event
 }
 

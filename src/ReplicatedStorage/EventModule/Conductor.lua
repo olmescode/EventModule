@@ -21,15 +21,17 @@ return function(stubs)
 		return
 	end
 	
-	-- Creates a new countdown
+	-- Create a new countdown timer
 	Conductor.handleLoadCountdown = Conductor.CountdownTimers()
 	Conductor.LoadCountdownServer.Event:Connect(Conductor.handleLoadCountdown)
 	
-	--  Handles the conductor ready event
+	-- Connect to the ConductorReady event to handle readiness on the server side
 	Conductor.handleCounductorReady =  Conductor.ConductorReadyHandler
 	Conductor.ConductorReady.OnServerEvent:Connect(Conductor.handleCounductorReady)
 	
 	hasBeenCalled = true
+	
+	-- Set an attribute indicating that the framework is ready
 	script:SetAttribute(enums.Attribute.FrameworkReady, true)
 	
 	return Conductor
