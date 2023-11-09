@@ -2,15 +2,16 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local EventModule = script:FindFirstAncestor("EventModule")
+local enums = require(EventModule.enums)
 
 local Conductor = {}
 
-Conductor.ShowCountdown = require(EventModule.Functions.showCountdown)
-Conductor.ShowVotingGUI = require(EventModule.Functions.showVotingGUI)
+Conductor.CountdownTimers = require(EventModule.Components.CountdownTimers)
+Conductor.ConductorReadyHandler = require(EventModule.Components.ConductorReadyHandler)
 
 -- Events
-Conductor.Countdown = EventModule.Events.ServerEvents.Countdown :: RemoteEvent
-Conductor.CountdownFinished = EventModule.Events.ClientEvents.CountdownFinishedForClient :: BindableEvent
+Conductor.LoadCountdownServer = EventModule.Events.ServerEvents.LoadCountdown :: BindableEvent
+Conductor.ConductorReady = EventModule.Events.ClientEvents.ConductorReady :: RemoteEvent
 
 local hasBeenCalled = false
 
@@ -20,15 +21,16 @@ return function(stubs)
 		return
 	end
 	
-	-- Connect events
-	Conductor.handleShowCountdown = Conductor.ShowCountdown()
-	Conductor.Countdown.OnClientEvent:Connect(Conductor.handleShowCountdown)
+	-- Creates a new countdown
+	Conductor.handleLoadCountdown = Conductor.CountdownTimers()
+	Conductor.LoadCountdownServer.Event:Connect(Conductor.handleLoadCountdown)
 	
-	-- Display the voting GUI after the countdown
-	Conductor.handleShowVotingGUI = Conductor.ShowVotingGUI()
-	Conductor.CountdownFinished.Event:Connect(Conductor.handleShowVotingGUI)
+	--  Handles the conductor ready event
+	Conductor.handleCounductorReady =  Conductor.ConductorReadyHandler
+	Conductor.ConductorReady.OnServerEvent:Connect(Conductor.handleCounductorReady)
 	
 	hasBeenCalled = true
-
+	script:SetAttribute(enums.Attribute.FrameworkReady, true)
+	
 	return Conductor
 end

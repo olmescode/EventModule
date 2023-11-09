@@ -13,7 +13,6 @@ local function countdownStart(countdownName, taskLib)
 	local currentTime = activeCountdowns[countdownName]
 	
 	-- Fire to client the currentTimed and start a countdown in the client
-	task.wait(5)
 	countdownRemote:FireAllClients(currentTime, countdownName)
 
 	while activeCountdowns[countdownName] > 0 do

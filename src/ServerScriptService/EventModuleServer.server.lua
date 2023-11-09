@@ -8,10 +8,8 @@ local VOTE_DURATION = 20
 local COUNTDOWN_NAME = "Countdown"
 local VOTE_COUNTDOWN_NAME = "VoteCountdown"
 
-EventModule.addTimeToCountdown(COUNTDOWN_NAME, INTERMISSION_DURATION)
-
--- TODO Fix this event that is not working
-EventModule.onCountdownFinishedForServer:Connect(function(...: any)
-	print("ended server")
-	EventModule.addTimeToCountdown(VOTE_COUNTDOWN_NAME, VOTE_DURATION)
+EventModule.onCountdownFinishedForServer:Connect(function(countdownName)
+	EventModule.loadCountdown(VOTE_COUNTDOWN_NAME, VOTE_DURATION)
 end)
+
+EventModule.loadCountdown(COUNTDOWN_NAME, INTERMISSION_DURATION)

@@ -1,4 +1,8 @@
 local enums = {
+	Attribute = {
+		FrameworkReady = "FrameworkReady",
+	},
+	
 	TeamOptions = {
 		Blue = "Blue",
 		Green = "Green",
