@@ -42,7 +42,7 @@ local function showCountdown(countdownFrame, taskLib)
 		activeCountdowns[countdownName] = currentTime
 		
 		-- Make the boostFrame label visible
-		--countdownFrame.Visible = true
+		countdownFrame.Visible = true
 		
 		-- Function to convert remaining time (currentTime) to MM:SS format
 		local function currentTimeToStr(updatedTime)
@@ -55,7 +55,8 @@ local function showCountdown(countdownFrame, taskLib)
 		local function updateCountdownLabel(updatedTime, countdownName)
 			local label = countdownFrame[countdownName]
 			if label then
-				label.Text = constants.COUNTDOWN_MESSAGE .. currentTimeToStr(updatedTime)
+				local currentText = label.Text
+				label.Text = string.gsub(currentText, "%d+:%d+", currentTimeToStr(updatedTime))
 			end
 		end
 		
@@ -73,7 +74,6 @@ local function showCountdown(countdownFrame, taskLib)
 		
 		-- Check if there are no more active countdowns
 		for countdownName, countdownTime in pairs(activeCountdowns) do
-			print(countdownName, countdownTime)
 			if countdownTime and countdownTime > 0 then
 				hasActiveCountdowns = true
 				break
@@ -82,7 +82,7 @@ local function showCountdown(countdownFrame, taskLib)
 
 		-- Hide the boostFrame when there are no more active countdowns
 		if not hasActiveCountdowns then
-			--countdownFrame.Visible = false
+			countdownFrame.Visible = false
 		end
 		
 		-- Fire an event to enable showVotingGui
