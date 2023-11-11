@@ -65,11 +65,7 @@ local function showVotingGUI(voteFrame)
 		table.insert(connections, greenTeamButton.MouseButton1Click:Connect(handleGreenTeamVoteButton))
 		
 		-- Make the voteFrame frame visible.
-		if countdownName == "Countdown" then
-			voteFrame.Visible = true
-		else
-			voteFrame.Visible = false
-		end
+		voteFrame.Visible = countdownName == enums.CountdownNames.Intermission
 	end
 end
 
