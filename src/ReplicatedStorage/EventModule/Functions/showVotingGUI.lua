@@ -48,13 +48,13 @@ local function showVotingGUI(voteFrame)
 		local function handleBlueTeamVoteButton()
 			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
-			voteRemote:FireServer(Players.LocalPlayer, enums.TeamOptions.Blue)
+			voteRemote:FireServer(enums.TeamOptions.Blue)
 		end
 		
 		local function handleGreenTeamVoteButton()
 			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
-			voteRemote:FireServer(Players.LocalPlayer, enums.TeamOptions.Green)
+			voteRemote:FireServer(enums.TeamOptions.Green)
 		end
 		
 		-- Disconnect old connections.
