@@ -7,7 +7,13 @@ local enums = {
 		Blue = "Blue",
 		Green = "Green",
 	},
-
+	
+	CountdownNames = {
+		Intermission = "IntermissionCountdown",
+		Vote = "VoteCountdown",
+		Round = "RoundCountdown",
+	},
+	
 	PrimaryButtonModes = {
 		Purchase = "Purchase",
 		Owned = "Owned",
