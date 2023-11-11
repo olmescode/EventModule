@@ -6,7 +6,7 @@ local enums = require(EventModule.enums)
 local playerGui = Players.LocalPlayer and Players.LocalPlayer:WaitForChild("PlayerGui")
 local mainGui = playerGui:WaitForChild("GameGui")
 
-local voteRemote = EventModule.Events.ClientEvents.Vote
+local voteRemote = EventModule.Events.ClientEvents.Vote :: RemoteEvent
 
 local connections = {}
 
@@ -48,13 +48,13 @@ local function showVotingGUI(voteFrame)
 		local function handleBlueTeamVoteButton()
 			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
-			voteRemote:FireServer(enums.TeamOptions.Blue, Players.LocalPlayer)
+			voteRemote:FireServer(Players.LocalPlayer, enums.TeamOptions.Blue)
 		end
 		
 		local function handleGreenTeamVoteButton()
 			closeVoteFrame()
 			-- Fire the server the selected team and the player's vote.
-			voteRemote:FireServer(enums.TeamOptions.Green, Players.LocalPlayer)
+			voteRemote:FireServer(Players.LocalPlayer, enums.TeamOptions.Green)
 		end
 		
 		-- Disconnect old connections.
