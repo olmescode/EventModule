@@ -23,7 +23,6 @@ return function(stubs)
 	
 	-- Get the existing teams
 	local existingTeams = Teams:GetTeams()
-	
 	local currentTeams = {}
 
 	for _, team in ipairs(existingTeams) do
