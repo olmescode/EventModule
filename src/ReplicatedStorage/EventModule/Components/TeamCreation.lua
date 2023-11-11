@@ -1,14 +1,26 @@
 local Teams = game:GetService("Teams")
 
 local EventModule = script:FindFirstAncestor("EventModule")
+
 local teams = require(EventModule.constants).Teams
+local enums = require(EventModule.enums)
 
 --[[
 	TeamCreation Module Script
 
-	This module script is responsible for creating teams in the game.
+	This module script is responsible for creating teams in the game,
+	it checks for existing teams and creates them if they don't exist.
 ]]
-return function()
+local TeamCreation = {}
+
+local hasBeenCalled = false
+
+return function(stubs)
+	if hasBeenCalled then
+		error("TeamCreation has already been called")
+		return
+	end
+	
 	-- Get the existing teams
 	local existingTeams = Teams:GetTeams()
 	
@@ -40,4 +52,11 @@ return function()
 		defaultTeam.AutoAssignable = teams.Default.AutoAssignable
 		defaultTeam.Parent = Teams
 	end
+	
+	hasBeenCalled = true
+	
+	-- Set an attribute indicating that the framework is ready
+	script:SetAttribute(enums.Attribute.FrameworkReady, true)
+	
+	return TeamCreation
 end
