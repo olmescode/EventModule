@@ -11,10 +11,11 @@ local LoadCountdownServer = EventModule.Events.ServerEvents.LoadCountdown :: Bin
 	This module script defines the function to load a countdown on the server
 
 	Parameters:
-	- eventToFire (string): The name of the event to fire when the countdown ends
-	- countdownTime (number): The time in seconds for the countdown to last
+	- countdownName (string): The name of the countdown
+    - duration (number): The time in seconds for the countdown to last
+    - taskLib (table): Optional task library, default is the global 'task'
 ]]
-return function(countdownName, duration, taskLib)
+return function(countdownName: string, duration: number, taskLib: TaskScheduler?)
 	assert(RunService:IsServer(), "Loading a countdown can only be programmatically called from the server")
 	assert(duration == nil or typeof(duration) == "number", "Duration must be a number")
 	
