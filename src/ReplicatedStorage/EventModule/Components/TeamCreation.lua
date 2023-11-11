@@ -24,10 +24,16 @@ return function(stubs)
 	-- Get the existing teams
 	local existingTeams = Teams:GetTeams()
 	
+	local currentTeams = {}
+
+	for _, team in ipairs(existingTeams) do
+		currentTeams[team.Name] = team
+	end
+	
 	-- Check if the teams already exist (to avoid duplicates)
-	local blueTeam = existingTeams[teams.Blue.Name]
-	local greenTeam = existingTeams[teams.Green.Name]
-	local defaultTeam = existingTeams[teams.Default.Name]
+	local blueTeam = currentTeams[teams.Blue.Name]
+	local greenTeam = currentTeams[teams.Green.Name]
+	local defaultTeam = currentTeams[teams.Default.Name]
 
 	if not blueTeam then
 		blueTeam = Instance.new("Team")
