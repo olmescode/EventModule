@@ -4,8 +4,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local EventModule = require(ReplicatedStorage:WaitForChild("EventModule"))
 
 -- Durations (in seconds)
-local INTERMISSION_DURATION = 30 -- 30 seconds for intermission
-local VOTE_DURATION = 20 -- 20 seconds for voting
+local INTERMISSION_DURATION = 10 -- 30 seconds for intermission
+local VOTE_DURATION = 10 -- 20 seconds for voting
 local ROUND_DURATION = 180 -- 180 seconds for a round
 
 -- Countdown Names
@@ -27,6 +27,10 @@ end
 -- Connect the event handler for countdown finishing
 EventModule.onCountdownFinishedForServer:Connect(function(countdownName)
 	loadNextCountdown(countdownName)
+	
+	if countdownName == "VoteCountdown" then
+		EventModule.teamRebalancer()
+	end
 end)
 
 -- Initial load of the intermission countdown

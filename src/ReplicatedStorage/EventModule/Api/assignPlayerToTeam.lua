@@ -16,6 +16,8 @@ local function assignPlayerToTeam(player: Player, teamName: string)
 		player.Team = team
 		-- Add an Attribute to indicate the player's chosen team
 		player:SetAttribute("ChosenTeam", teamName)
+		-- Respawn the player
+		player:LoadCharacter()
 	end
 end
 
